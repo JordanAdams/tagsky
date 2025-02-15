@@ -1,0 +1,25 @@
+name: tagsky
+
+services:
+  ingestor:
+    build:
+      context: .
+      target: build
+    command: go run . ingestor
+    environment:
+      PORT: 3000
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    develop:
+      watch:
+        - action: sync+restart
+          path: .
+          target: /go/src
+          ignore:
+            - go.mod
+            - go.sum
+        - action: rebuild
+          path: go.mod
+        - action: rebuild
+          path: go.sum
